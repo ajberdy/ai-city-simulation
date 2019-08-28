@@ -19,6 +19,11 @@ ID = sgqlc.types.ID
 
 Int = sgqlc.types.Int
 
+class RelativeDirection(sgqlc.types.Enum):
+    __schema__ = graphql_schema
+    __choices__ = ('STRAIGHT', 'LEFT', 'RIGHT')
+
+
 class Scene(sgqlc.types.Enum):
     __schema__ = graphql_schema
     __choices__ = ('CARDEMO', 'WELCOME')

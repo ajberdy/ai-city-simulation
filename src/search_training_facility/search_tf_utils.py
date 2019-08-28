@@ -1,19 +1,8 @@
+from enum import Enum, auto
+
 from sgqlc.operation import Operation
 from graphql_schema import graphql_schema as schema
 from src.graphql_utils import endpoint
-
-op = Operation(schema.Query)
-
-"""
-query {
-  searchTf {
-    id
-    roadGraph {
-      name
-    }
-  }
-}
-"""
 
 
 def get_map():
@@ -41,4 +30,35 @@ def get_map():
 
     return result.search_tf.road_graph
 
-print(get_map())
+
+class SearchState:
+    __slots__ = ("last_intersection", "distance_since", "direction")
+
+
+class NoValue(Enum):
+    def __repr__(self):
+        return '<%s.%s>' % (self.__class__.__name__, self.name)
+
+
+def direction_to_orientation(current_orientation, turn_direction):
+    """ convert turn relative direction to new absolute orientation """
+    orientations = [
+        schema.Direction.NORTH,
+        schema.Direction.EAST,
+        schema.Direction.SOUTH,
+        schema.Direction.WEST
+    ]
+    current_orientation_index = orientations.index(current_orientation)
+
+    if turn_direction == schema.RelativeDirection.STRAIGHT:
+        return current_orientation
+
+    if turn_direction == schema.RelativeDirection.LEFT:
+        return orientations[current_orientation_index - 1]
+
+    if turn_direction == schema.RelativeDirection.RIGHT:
+        return orientations[(current_orientation_index + 1) % 4]
+
+
+# print(get_map())
+# print(direction_to_orientation("EAST", "LEFT"))
