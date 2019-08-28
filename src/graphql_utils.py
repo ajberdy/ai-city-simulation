@@ -5,20 +5,4 @@ headers = {'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOi
                             'bDhjdjN3MDc5NGFpZ2JqbjZnIiwiaWF0IjoxNTY2Njg0NTYyfQ.MEHsGyvdmR'
                             'Hj7zQh0t8b7FLXPf4Z_KbDcDeLlJ_Hbj8'
            }
-
-query = """
-    query {
-      searchTf {
-        id
-        roadGraph {
-          name
-        }
-      }
-    }
-"""
-variables = {}
-
 endpoint = HTTPEndpoint(url, headers)
-data = endpoint(query, variables)
-
-print(data)
