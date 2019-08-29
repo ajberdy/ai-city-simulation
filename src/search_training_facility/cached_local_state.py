@@ -33,13 +33,15 @@ class SearchTfState:
         "_road_graph",
         "_intersections",
         "_connections",
-        "_starting_car_state"
+        "_starting_car_state",
+        "_update_buffer"
     )
 
     def __init__(self):
         self._road_graph = None
         self._intersections = None
         self._connections = None
+        self._update_buffer = []
 
     @property
     def road_graph(self):
@@ -67,6 +69,10 @@ class SearchTfState:
     def starting_car_state(self):
         start_state = self.road_graph.start_state
         return CarState(start_state.last_intersection, start_state.distance_since, start_state.direction)
+
+    @property
+    def time(self):
+        return len(self._update_buffer)
 
     def reset(self):
         """ reset state """
@@ -139,3 +145,44 @@ class SearchTfState:
         intersection = self.intersections[intersection]
         roads = [self.connections[ix] for ix in intersection.connections]
         return [road for road in roads if direction_check(road)]
+
+    def append_update(self, update):
+        """
+        append an update to the update buffer
+
+        :param update: CarState
+        :return:
+        """
+        self._update_buffer.append((self.time, update))
+
+    def push_updates(self):
+        """
+        push update buffer to database in order to be rendered by the graphics
+
+        :return:
+        """
+        times, updates = zip(*self._update_buffer)
+        intersections, distances, directions = zip(*updates)
+        print(times)
+        print(intersections)
+
+        op = Operation(schema.Mutation)
+        update = op.push_update_buffer(
+            times=times,
+            intersections=intersections,
+            distances=distances,
+            directions=directions
+        )
+
+        update.time()
+        new_car_loc = update.new_car_loc()
+        new_car_loc.intersection()
+        new_car_loc.distance()
+        new_car_loc.direction()
+
+        data = endpoint(op)
+        result = op + data
+
+        print(result)
+        return result
+

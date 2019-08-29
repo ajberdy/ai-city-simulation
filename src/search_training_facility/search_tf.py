@@ -15,7 +15,7 @@ class SearchTrainingFacility:
     def __init__(self):
         # facility state takes care of metadata such as the road graph and starting location
         self.facility_state = SearchTfState()
-        self.car_state = self.facility_state.starting_car_state
+        self.car_state = CarState(*self.facility_state.starting_car_state)
 
     def reset_facility_state(self):
         """ clear local state cache """
@@ -33,7 +33,9 @@ class SearchTrainingFacility:
         road = self.facility_state.get_current_road(self.car_state)
 
         if 0 < distance_since < road.length:
-            self.car_state.distance_since += 1
+            self.car_state = CarState(last_intersection, distance_since + 1, direction)
+
+            self.append_current_state()
             return
 
         if distance_since == road.length:
@@ -48,9 +50,8 @@ class SearchTrainingFacility:
             new_last_intersection = next_road.start_name
             new_distance_since = 1
             new_direction = next_road.direction
-            self.car_state.last_intersection = new_last_intersection
-            self.car_state.distance_since = new_distance_since
-            self.car_state.direction = new_direction
+            self.car_state = CarState(new_last_intersection, new_distance_since, new_direction)
+            self.append_current_state()
             return
 
         raise IndexError("Distance since last intersection must be in [1, road_length]")    # this shouldn't happen
@@ -88,8 +89,12 @@ class SearchTrainingFacility:
 
         raise IndexError("Distance since last intersection must be in [1, road_length]")
 
-    def random_move(self):
+    def random_move(self, max_moves=100):
+        moves = 0
         while True:
+            if moves == max_moves:
+                return
+            moves += 1
             print(f"current state: {self.car_state}")
             for action in RELATIVE_DIRECTIONS:
                 try:
@@ -100,6 +105,9 @@ class SearchTrainingFacility:
                     print(f"can't move {action}")
             else:
                 break
+
+    def append_current_state(self):
+        self.facility_state.append_update(self.car_state)
 
 
 
@@ -115,3 +123,4 @@ state = CarState((0, 6), 5, "SOUTH")
 # print(search_training_facility.get_next_states(state))
 
 search_training_facility.random_move()
+search_training_facility.facility_state.push_updates()
