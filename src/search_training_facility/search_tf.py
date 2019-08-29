@@ -110,7 +110,6 @@ class SearchTrainingFacility:
         self.facility_state.append_update(self.car_state)
 
 
-
 search_training_facility = SearchTrainingFacility()
 # print(search_training_facility.facility_state.road_graph)
 # print(search_training_facility.facility_state.intersections)
