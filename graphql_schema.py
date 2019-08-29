@@ -57,6 +57,13 @@ class Car(sgqlc.types.Type):
     location = sgqlc.types.Field(sgqlc.types.non_null(Int), graphql_name='location')
 
 
+class CarState(sgqlc.types.Type):
+    __schema__ = graphql_schema
+    last_intersection = sgqlc.types.Field(sgqlc.types.non_null(String), graphql_name='last_intersection')
+    distance_since = sgqlc.types.Field(sgqlc.types.non_null(Int), graphql_name='distance_since')
+    direction = sgqlc.types.Field(sgqlc.types.non_null(Direction), graphql_name='direction')
+
+
 class City(sgqlc.types.Type):
     __schema__ = graphql_schema
     id = sgqlc.types.Field(sgqlc.types.non_null(ID), graphql_name='id')
@@ -80,6 +87,9 @@ class Connection(sgqlc.types.Type):
     index = sgqlc.types.Field(sgqlc.types.non_null(Int), graphql_name='index')
     start = sgqlc.types.Field(sgqlc.types.non_null(Int), graphql_name='start')
     end = sgqlc.types.Field(sgqlc.types.non_null(Int), graphql_name='end')
+    start_name = sgqlc.types.Field(String, graphql_name='startName')
+    end_name = sgqlc.types.Field(String, graphql_name='endName')
+    length = sgqlc.types.Field(Int, graphql_name='length')
     speed = sgqlc.types.Field(Int, graphql_name='speed')
     direction = sgqlc.types.Field(sgqlc.types.non_null(Direction), graphql_name='direction')
 
@@ -192,6 +202,7 @@ class SearchRoadGraph(sgqlc.types.Type):
     name = sgqlc.types.Field(sgqlc.types.non_null(String), graphql_name='name')
     intersections = sgqlc.types.Field(sgqlc.types.non_null(sgqlc.types.list_of(sgqlc.types.non_null(Intersection))), graphql_name='intersections')
     connections = sgqlc.types.Field(sgqlc.types.non_null(sgqlc.types.list_of(sgqlc.types.non_null(Connection))), graphql_name='connections')
+    start_state = sgqlc.types.Field(CarState, graphql_name='startState')
 
 
 class SearchState(sgqlc.types.Type):
