@@ -34,7 +34,8 @@ class SearchTfState:
         "_intersections",
         "_connections",
         "_starting_car_state",
-        "_update_buffer"
+        "_update_buffer",
+        "_search_algorithm"
     )
 
     def __init__(self):
@@ -42,6 +43,7 @@ class SearchTfState:
         self._intersections = None
         self._connections = None
         self._update_buffer = []
+        self._search_algorithm = None
 
     @property
     def road_graph(self):
@@ -171,7 +173,8 @@ class SearchTfState:
             times=times,
             intersections=intersections,
             distances=distances,
-            directions=directions
+            directions=directions,
+            search_algorithm=self._search_algorithm
         )
 
         update.time()
@@ -186,3 +189,5 @@ class SearchTfState:
         print(result)
         return result
 
+    def set_search_algorithm(self, algorithm):
+        self._search_algorithm = algorithm
