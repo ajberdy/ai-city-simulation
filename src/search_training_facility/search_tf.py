@@ -93,6 +93,7 @@ class SearchTrainingFacility:
     def random_move(self, max_moves=100):
         # self.set_search_algorithm(SearchAlgorithm.BREADTH_FIRST_SEARCH)
         self.set_search_algorithm(SearchAlgorithm.RANDO_TRAVERSAL)
+
         moves = 0
         while True:
             if moves == max_moves:
@@ -111,6 +112,9 @@ class SearchTrainingFacility:
 
     def append_current_state(self):
         self.facility_state.append_update(self.car_state)
+
+    def depth_first_search(self):
+        pass
 
     def set_search_algorithm(self, algorithm):
         self.facility_state.set_search_algorithm(algorithm)

@@ -183,6 +183,7 @@ class SearchTfState:
         new_car_loc.distance()
         new_car_loc.direction()
 
+        print(op)
         data = endpoint(op)
         result = op + data
 
